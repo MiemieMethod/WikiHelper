@@ -1,0 +1,1 @@
+package net.mcjedev.mods.wikihelper;

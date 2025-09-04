@@ -1,0 +1,34 @@
+{
+	"schemaVersion": 1,
+	"id": "wikihelper",
+	"version": "${version}",
+	"name": "Wiki Helper",
+	"description": "Helps with creating and maintaining modded Minecraft wikis by generating wiki markup for items, blocks, entities, and more.",
+	"authors": [
+		"Minecraft Java Edition Development Wiki Team"
+	],
+	"contact": {
+		"sources": "https://github.com/MiemieMethod/WikiHelper",
+		"issues": "https://github.com/MiemieMethod/WikiHelper/issues"
+	},
+	"license": "All Rights Reserved",
+	"icon": "assets/wikihelper/icon.png",
+	"entrypoints": {
+		"main": [
+			"net.mcjedev.mods.wikihelper.fabric.WikiHelperFabric"
+		],
+		"rei_client": [
+		]
+	},
+	"mixins": [
+		"wikihelper-common.mixins.json",
+		"wikihelper-fabric.mixins.json"
+	],
+	"depends": {
+		"fabric": "${fabricapiversionrange}",
+		"minecraft": "~${mcversion}",
+		"architectury": ">=${archversion}"
+	},
+	"breaks": {
+	}
+}

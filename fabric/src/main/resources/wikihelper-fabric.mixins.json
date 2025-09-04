@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "net.mcjedev.mods.wikihelper.fabric.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

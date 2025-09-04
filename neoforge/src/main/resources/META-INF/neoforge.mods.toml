@@ -1,0 +1,40 @@
+modLoader = "javafml"
+loaderVersion = "[${neoforgeloaderversion},)"
+issueTrackerURL = "https://github.com/MiemieMethod/WikiHelper/issues"
+license = "All Rights Reserved"
+
+[[mixins]]
+config = "wikihelper-common.mixins.json"
+[[mixins]]
+config = "wikihelper-neoforge.mixins.json"
+
+[[mods]]
+modId = "wikihelper"
+version = "${version}"
+displayName = "Wiki Helper"
+authors = "Minecraft Java Edition Development Wiki Team"
+description = '''
+Helps with creating and maintaining modded Minecraft wikis by generating wiki markup for items, blocks, entities, and more.
+'''
+#logoFile = ""
+
+[[dependencies.wikihelper]]
+modId = "neoforge"
+type = "required"
+versionRange = "${neoforgeversionrange}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.wikihelper]]
+modId = "minecraft"
+type = "required"
+versionRange = "[${mcversion},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.wikihelper]]
+modId = "architectury"
+type = "required"
+versionRange = "[${archversion},)"
+ordering = "NONE"
+side = "BOTH"

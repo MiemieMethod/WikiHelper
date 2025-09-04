@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "mixin": [
+    "wikihelper-common.mixins.json",
+    "wikihelper-quilt.mixins.json"
+  ],
+  "quilt_loader": {
+    "group": "${group}",
+    "id": "wikihelper",
+    "version": "${version}",
+    "metadata": {
+      "name": "Wiki Helper",
+      "description": "Helps with creating and maintaining modded Minecraft wikis by generating wiki markup for items, blocks, entities, and more.",
+      "contributors": {
+        "Minecraft Java Edition Development Wiki Team": "Owner"
+      },
+      "contact": {
+        "sources": "https://github.com/MiemieMethod/WikiHelper"
+      },
+      "icon": "assets/wikihelper/icon.png"
+    },
+    "intermediate_mappings": "net.fabricmc:intermediary",
+    "entrypoints": {
+      "init": [
+        "net.mcjedev.mods.wikihelper.quilt.WikiHelperQuilt"
+      ]
+    },
+    "depends": [
+      {
+        "id": "quilt_loader",
+        "version": "*"
+      },
+      {
+        "id": "quilt_base",
+        "version": "*"
+      },
+      {
+        "id": "minecraft",
+        "version": "~${mcversion}"
+      },
+      {
+        "id": "architectury",
+        "version": ">=${archversion}"
+      }
+    ]
+  },
+  "minecraft": {
+    "environment": "*"
+  }
+}

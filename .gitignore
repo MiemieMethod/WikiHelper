@@ -19,3 +19,21 @@ gradle-app.setting
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+
+# Other
+bin
+*.launch
+.settings
+.metadata
+eclipse
+run
+.architectury-transformer/
+**/extra-mods-*
+.DS_Store
+logs
+.vscode
+out
+*.ipr
+*.iws
+*.iml
+.idea
