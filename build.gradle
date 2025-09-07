@@ -53,7 +53,36 @@ allprojects {
 				includeGroup "dev.architectury"
 			}
 		}
-
+		maven {
+			url "https://maven.ftb.dev/releases"
+			content {
+				includeGroup "dev.ftb.mods"
+			}
+		}
+		maven {
+			url "https://maven.ftb.dev/snapshots"
+			content {
+				includeGroup "dev.ftb.mods"
+			}
+		}
+		maven {
+			url = 'https://repo.spongepowered.org/repository/maven-public/'
+			content {
+				includeGroup 'org.spongepowered'
+			}
+		}
+		maven {
+			url = 'https://maven.parchmentmc.org/'
+			content {
+				includeGroup 'org.parchmentmc.data'
+			}
+		}
+		maven {
+			url = 'https://api.modrinth.com/maven/'
+			content {
+				includeGroup 'maven.modrinth'
+			}
+		}
 	}
 
 	java {
