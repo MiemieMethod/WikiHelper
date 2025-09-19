@@ -38,8 +38,9 @@ public class DumpHelper {
             init(server);
             INITIALIZED = true;
         }
-        setRegistryOps(server);
+        updateRegistryOps(server);
         dumpMods();
+        releaseRegistryOps();
     }
 
     @SuppressWarnings("unchecked")
@@ -52,10 +53,6 @@ public class DumpHelper {
             LOGGER.error("Failed to access BuiltInRegistries.WRITABLE_REGISTRY", e);
             return null;
         }
-    }
-
-    public static void setRegistryOps(MinecraftServer server) {
-        REGISTRY_OPS = RegistryOps.create(JsonOps.INSTANCE, server.registryAccess());
     }
 
     public static void updateKnownMods() {
@@ -85,6 +82,14 @@ public class DumpHelper {
 
     public static void registerRegistryDeserializers() {
         ENTRY_DESERIALIZER_REGISTRY.put("minecraft:item", new MinecraftItemEntryDeserializer());
+    }
+
+    public static void updateRegistryOps(MinecraftServer server) {
+        REGISTRY_OPS = RegistryOps.create(JsonOps.INSTANCE, server.registryAccess());
+    }
+
+    public static void releaseRegistryOps() {
+        REGISTRY_OPS = null;
     }
 
     public static void dumpMods() {

@@ -29,13 +29,12 @@ public class MinecraftItemEntryDeserializer implements IEntryDeserializer {
         item.components().forEach(component -> {
             var cp = (TypedDataComponent<Object>) (Object) component;
             var result = Objects.requireNonNull(cp.type().codec()).encodeStart(REGISTRY_OPS, cp.value());
-            if (result.result().isPresent()) {
-                JsonElement json = result.result().get();
+            result.result().ifPresentOrElse(json -> {
                 compObj.add(component.type().toString(), json);
-            } else {
+            }, () -> {
                 compObj.addProperty(component.type().toString(), component.value().toString());
                 LOGGER.warn("Failed to serialize component {} of item {}, reason: {}", component.type(), item.toString(), result.error());
-            }
+            });
         });
         entryObj.add("components", compObj);
     }
