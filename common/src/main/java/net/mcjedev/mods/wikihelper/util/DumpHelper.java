@@ -2,12 +2,15 @@ package net.mcjedev.mods.wikihelper.util;
 
 import java.util.*;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.JsonOps;
 import net.mcjedev.mods.wikihelper.util.registry.IEntryDeserializer;
 import net.mcjedev.mods.wikihelper.util.registry.MinecraftItemEntryDeserializer;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import org.apache.logging.log4j.LogManager;
@@ -17,6 +20,7 @@ public class DumpHelper {
     private static final Logger LOGGER = LogManager.getLogger(DumpHelper.class);
 
     public static boolean INITIALIZED = false;
+    public static RegistryOps<JsonElement> REGISTRY_OPS;
     public static final Set<String> KNOWN_MODS = new java.util.HashSet<>();
     public static final Map<String, MappedRegistry<Object>> TRACKED_REGISTRIES = new java.util.HashMap<>();
     public static final Map<String, Map<String, MappedRegistry<Object>>> REGISTRIES_REGISTRATION = new java.util.HashMap<>();
@@ -34,6 +38,7 @@ public class DumpHelper {
             init(server);
             INITIALIZED = true;
         }
+        setRegistryOps(server);
         dumpMods();
     }
 
@@ -47,6 +52,10 @@ public class DumpHelper {
             LOGGER.error("Failed to access BuiltInRegistries.WRITABLE_REGISTRY", e);
             return null;
         }
+    }
+
+    public static void setRegistryOps(MinecraftServer server) {
+        REGISTRY_OPS = RegistryOps.create(JsonOps.INSTANCE, server.registryAccess());
     }
 
     public static void updateKnownMods() {
