@@ -5,8 +5,10 @@ import com.google.gson.stream.JsonWriter;
 import net.mcjedev.mods.wikihelper.WikiHelper;
 import net.minecraft.util.GsonHelper;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Comparator;
 
 import net.mcjedev.mods.wikihelper.WikiHelperExpectPlatform;
@@ -17,19 +19,19 @@ public class FileHelper {
     private static final Logger LOGGER = LogManager.getLogger(FileHelper.class);
 
     public static void saveStable(JsonElement jsonElement, String fileName) {
-        java.nio.file.Path dir = WikiHelperExpectPlatform.getConfigDirectory().resolve(WikiHelper.MOD_ID);
-        java.nio.file.Path filePath = dir.resolve(fileName);
-        File file = filePath.toFile();
-        File parent = file.getParentFile();
-        if (parent != null && !parent.exists()) {
-            parent.mkdirs();
-        }
-        try (JsonWriter jsonWriter = new JsonWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
-            jsonWriter.setSerializeNulls(false);
-            jsonWriter.setIndent("  ");
-            GsonHelper.writeValue(jsonWriter, jsonElement, Comparator.naturalOrder());
-        } catch (IOException iOException) {
-            LOGGER.error("Failed to save file to {}", filePath.toUri(), iOException);
+        var dir = WikiHelperExpectPlatform.getConfigDirectory().resolve(WikiHelper.MOD_ID);
+        var filePath = dir.resolve(fileName);
+
+        try {
+            Files.createDirectories(dir);
+            try (Writer writer = Files.newBufferedWriter(filePath, StandardCharsets.UTF_8);
+                 JsonWriter jsonWriter = new JsonWriter(writer)) {
+                jsonWriter.setSerializeNulls(false);
+                jsonWriter.setIndent("  ");
+                GsonHelper.writeValue(jsonWriter, jsonElement, Comparator.naturalOrder());
+            }
+        } catch (IOException e) {
+            LOGGER.error("Failed to save file to {}", filePath.toUri(), e);
         }
     }
 

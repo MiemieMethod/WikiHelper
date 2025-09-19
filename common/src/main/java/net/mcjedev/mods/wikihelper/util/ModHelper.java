@@ -16,11 +16,7 @@ public class ModHelper {
 
     public static Optional<String> getModNameI18n(String namespace) {
         String modMenuKey = "modmenu.nameTranslation.%s".formatted(namespace);
-        if (I18n.exists(modMenuKey)) {
-            return Optional.of(I18n.get(modMenuKey));
-        } else {
-            return Optional.empty();
-        }
+        return I18n.exists(modMenuKey) ? Optional.of(I18n.get(modMenuKey)) : Optional.empty();
     }
 
     @ExpectPlatform

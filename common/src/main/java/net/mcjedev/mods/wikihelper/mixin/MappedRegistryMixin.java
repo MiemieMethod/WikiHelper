@@ -22,13 +22,14 @@ public class MappedRegistryMixin {
             method = "<init>(Lnet/minecraft/resources/ResourceKey;Lcom/mojang/serialization/Lifecycle;Z)V",
             at = @At("RETURN")
     )
+    @SuppressWarnings("unchecked")
     private void onConstructed(ResourceKey<?> resourceKey, Lifecycle lifecycle, boolean bl, CallbackInfo ci) {
-        String key = resourceKey.location().toString();
+        var key = resourceKey.location().toString();
         if (DumpHelper.TRACKED_REGISTRIES.containsKey(key)) {
             wiki_Helper_1_21$LOGGER.info("Duplicated registry: {}", resourceKey.location());
             return;
         }
-        DumpHelper.TRACKED_REGISTRIES.put(key, (MappedRegistry<?>) (Object) this);
+        DumpHelper.TRACKED_REGISTRIES.put(key, (MappedRegistry<Object>) (Object) this);
         wiki_Helper_1_21$LOGGER.info("Tracked registry: {}", resourceKey.location());
     }
 }

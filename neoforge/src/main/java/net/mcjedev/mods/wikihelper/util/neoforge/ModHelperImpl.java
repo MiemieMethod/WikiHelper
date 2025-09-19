@@ -28,39 +28,35 @@ public class ModHelperImpl {
     }
 
     public static JsonObject getModMetaObject(String namespace) {
-        JsonObject metaObj = new JsonObject();
-        metaObj.addProperty("id", namespace);
-        ModContainer mod = ModList.get().getModContainerById(namespace).orElse(null);
-        if (mod != null) {
-            IModInfo modInfo = mod.getModInfo();
+        var metaObj = new JsonObject();
+
+        ModList.get().getModContainerById(namespace).ifPresentOrElse(mod -> {
+            var modInfo = mod.getModInfo();
+            metaObj.addProperty("id", modInfo.getModId());
             metaObj.addProperty("name", modInfo.getDisplayName());
             metaObj.addProperty("description", modInfo.getDescription());
             metaObj.addProperty("version", modInfo.getVersion().toString());
             if (!modInfo.getDependencies().isEmpty()) {
-                JsonObject metaDeps = new JsonObject();
-                modInfo.getDependencies().forEach(dep -> {
-                    if (!Strings.isNullOrEmpty(dep.getModId())) {
-                        String kind = switch (dep.getType()) {
-                            case REQUIRED -> "required";
-                            case OPTIONAL -> "optional";
-                            case INCOMPATIBLE -> "incompatible";
-                            case DISCOURAGED -> "disallowed";
-                        };
-                        if (metaDeps.has(kind)) {
-                            metaDeps.getAsJsonArray(kind).add(dep.getModId());
-                        } else {
-                            JsonArray arr = new JsonArray();
+                var metaDeps = new JsonObject();
+                modInfo.getDependencies().stream()
+                        .filter(dep -> !Strings.isNullOrEmpty(dep.getModId()))
+                        .forEach(dep -> {
+                            var kind = switch (dep.getType()) {
+                                case REQUIRED -> "required";
+                                case OPTIONAL -> "optional";
+                                case INCOMPATIBLE -> "incompatible";
+                                case DISCOURAGED -> "discouraged";
+                            };
+                            var arr = metaDeps.has(kind) ? metaDeps.getAsJsonArray(kind) : new JsonArray();
                             arr.add(dep.getModId());
                             metaDeps.add(kind, arr);
-                        }
-                    }
-                });
+                        });
                 metaObj.add("dependencies", metaDeps);
             }
             metaObj.addProperty("namespace", modInfo.getNamespace());
             modInfo.getUpdateURL().ifPresent(url -> metaObj.addProperty("url_update", url.toExternalForm()));
             modInfo.getModURL().ifPresent(url -> metaObj.addProperty("url_mod", url.toExternalForm()));
-        }
+        }, () -> metaObj.addProperty("id", namespace));
 
         return metaObj;
     }

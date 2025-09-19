@@ -32,11 +32,11 @@ public class ModHelperImpl {
     }
 
     public static JsonObject getModMetaObject(String namespace) {
-        JsonObject metaObj = new JsonObject();
-        metaObj.addProperty("id", namespace);
-        ModContainer mod = FabricLoader.getInstance().getModContainer(namespace).orElse(null);
-        if (mod != null) {
-            ModMetadata meta = mod.getMetadata();
+        var metaObj = new JsonObject();
+
+        FabricLoader.getInstance().getModContainer(namespace).ifPresentOrElse(mod -> {
+            var meta = mod.getMetadata();
+            metaObj.addProperty("id", meta.getId());
             addJsonArray(metaObj, "aliases", meta.getProvides());
             metaObj.addProperty("version", meta.getVersion().toString());
             metaObj.addProperty("environment", switch (meta.getEnvironment()) {
@@ -45,39 +45,33 @@ public class ModHelperImpl {
                 case UNIVERSAL -> "universal";
             });
             if (!meta.getDependencies().isEmpty()) {
-                JsonObject metaDeps = new JsonObject();
-                meta.getDependencies().forEach(dep -> {
-                    if (!Strings.isNullOrEmpty(dep.getModId())) {
-                        String kind = dep.getKind().getKey();
-                        if (metaDeps.has(kind)) {
-                            metaDeps.getAsJsonArray(kind).add(dep.getModId());
-                        } else {
-                            JsonArray arr = new JsonArray();
+                var metaDeps = new JsonObject();
+                meta.getDependencies().stream()
+                        .filter(dep -> !Strings.isNullOrEmpty(dep.getModId()))
+                        .forEach(dep -> {
+                            var kind = dep.getKind().getKey();
+                            var arr = metaDeps.has(kind) ? metaDeps.getAsJsonArray(kind) : new JsonArray();
                             arr.add(dep.getModId());
                             metaDeps.add(kind, arr);
-                        }
-                    }
-                });
+                        });
                 metaObj.add("dependencies", metaDeps);
             }
             metaObj.addProperty("name", meta.getName());
             metaObj.addProperty("description", meta.getDescription());
             addPersonArray(metaObj, "authors", meta.getAuthors());
             addPersonArray(metaObj, "contributors", meta.getContributors());
-            ContactInformation contact = meta.getContact();
-            getContactObject(contact).ifPresent(contactObj -> metaObj.add("contact", contactObj));
+            getContactObject(meta.getContact()).ifPresent(contactObj -> metaObj.add("contact", contactObj));
             addJsonArray(metaObj, "licenses", meta.getLicense());
             mod.getContainingMod().ifPresent(parent -> metaObj.addProperty("parent", parent.getMetadata().getId()));
             if (!mod.getContainedMods().isEmpty()) {
-                JsonArray metaContained = new JsonArray();
-                mod.getContainedMods().forEach(child -> {
-                    if (!Strings.isNullOrEmpty(child.getMetadata().getId())) {
-                        metaContained.add(child.getMetadata().getId());
-                    }
-                });
+                var metaContained = new JsonArray();
+                mod.getContainedMods().stream()
+                        .map(child -> child.getMetadata().getId())
+                        .filter(Predicate.not(Strings::isNullOrEmpty))
+                        .forEach(metaContained::add);
                 metaObj.add("children", metaContained);
             }
-        }
+        }, () -> metaObj.addProperty("id", namespace));
 
         return metaObj;
     }
@@ -101,29 +95,21 @@ public class ModHelperImpl {
     }
 
     public static Optional<JsonObject> getPersonObject(Person person) {
-        if (!Strings.isNullOrEmpty(person.getName())) {
-            JsonObject personObj = new JsonObject();
-            personObj.addProperty("name", person.getName());
-            ContactInformation contact = person.getContact();
-            getContactObject(contact).ifPresent(contactObj -> personObj.add("contact", contactObj));
-            return Optional.of(personObj);
-        } else {
-            return Optional.empty();
-        }
+        if (Strings.isNullOrEmpty(person.getName())) return Optional.empty();
+        var personObj = new JsonObject();
+        personObj.addProperty("name", person.getName());
+        getContactObject(person.getContact()).ifPresent(contactObj -> personObj.add("contact", contactObj));
+        return Optional.of(personObj);
     }
 
     public static Optional<JsonObject> getContactObject(ContactInformation contact) {
-        JsonObject contactObj = new JsonObject();
+        var contactObj = new JsonObject();
         contact.asMap().forEach((key, value) -> {
             if (!Strings.isNullOrEmpty(value)) {
                 contactObj.addProperty(key, value);
             }
         });
-        if (!contactObj.isEmpty()) {
-            return Optional.of(contactObj);
-        } else {
-            return Optional.empty();
-        }
+        return contactObj.isEmpty() ? Optional.empty() : Optional.of(contactObj);
     }
 
 }

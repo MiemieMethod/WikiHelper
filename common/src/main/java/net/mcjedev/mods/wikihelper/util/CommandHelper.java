@@ -24,7 +24,7 @@ public class CommandHelper {
 
     public static void registerDump(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal(WikiHelper.MOD_ID).then(Commands.literal("dump").executes(context -> {
-            DumpHelper.init(context.getSource().getServer());
+            DumpHelper.dump(context.getSource().getServer());
             context.getSource().sendSuccess(() -> Component.translatable("commands.wikihelper.success"), false);
             return 1;
         })));
