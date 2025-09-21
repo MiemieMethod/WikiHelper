@@ -7,7 +7,6 @@ import net.minecraft.commands.Commands;
 
 import net.mcjedev.mods.wikihelper.WikiHelper;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.OutgoingChatMessage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

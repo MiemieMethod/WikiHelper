@@ -6,7 +6,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.JsonOps;
 import net.mcjedev.mods.wikihelper.util.registry.IEntryDeserializer;
-import net.mcjedev.mods.wikihelper.util.registry.MinecraftItemEntryDeserializer;
+import net.mcjedev.mods.wikihelper.util.registry.MinecraftBlockDeserializer;
+import net.mcjedev.mods.wikihelper.util.registry.MinecraftDataComponentTypeDeserializer;
+import net.mcjedev.mods.wikihelper.util.registry.MinecraftItemDeserializer;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -81,7 +83,9 @@ public class DumpHelper {
     }
 
     public static void registerRegistryDeserializers() {
-        ENTRY_DESERIALIZER_REGISTRY.put("minecraft:item", new MinecraftItemEntryDeserializer());
+        ENTRY_DESERIALIZER_REGISTRY.put("minecraft:block", new MinecraftBlockDeserializer());
+        ENTRY_DESERIALIZER_REGISTRY.put("minecraft:data_component_type", new MinecraftDataComponentTypeDeserializer());
+        ENTRY_DESERIALIZER_REGISTRY.put("minecraft:item", new MinecraftItemDeserializer());
     }
 
     public static void updateRegistryOps(MinecraftServer server) {
@@ -94,6 +98,8 @@ public class DumpHelper {
 
     public static void dumpMods() {
         KNOWN_MODS.forEach(namespace -> {
+//            LOGGER.info("Start dumping mod data for namespace: {}", namespace);
+
             var dataObj = new JsonObject();
             dataObj.add("meta", ModHelper.getModMetaObject(namespace));
 

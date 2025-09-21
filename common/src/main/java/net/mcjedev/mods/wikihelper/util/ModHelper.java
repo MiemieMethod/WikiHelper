@@ -2,7 +2,6 @@ package net.mcjedev.mods.wikihelper.util;
 
 import com.google.gson.JsonObject;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import dev.architectury.platform.Platform;
 import net.minecraft.client.resources.language.I18n;
 
 import java.util.List;
