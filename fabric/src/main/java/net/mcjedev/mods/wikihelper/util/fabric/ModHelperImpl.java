@@ -39,11 +39,7 @@ public class ModHelperImpl {
             metaObj.addProperty("id", meta.getId());
             addJsonArray(metaObj, "aliases", meta.getProvides());
             metaObj.addProperty("version", meta.getVersion().toString());
-            metaObj.addProperty("environment", switch (meta.getEnvironment()) {
-                case CLIENT -> "client";
-                case SERVER -> "server";
-                case UNIVERSAL -> "universal";
-            });
+            metaObj.addProperty("environment", meta.getEnvironment().name().toLowerCase());
             if (!meta.getDependencies().isEmpty()) {
                 var metaDeps = new JsonObject();
                 meta.getDependencies().stream()

@@ -41,12 +41,7 @@ public class ModHelperImpl {
                 modInfo.getDependencies().stream()
                         .filter(dep -> !Strings.isNullOrEmpty(dep.getModId()))
                         .forEach(dep -> {
-                            var kind = switch (dep.getType()) {
-                                case REQUIRED -> "required";
-                                case OPTIONAL -> "optional";
-                                case INCOMPATIBLE -> "incompatible";
-                                case DISCOURAGED -> "discouraged";
-                            };
+                            var kind = dep.getType().name().toLowerCase();
                             var arr = metaDeps.has(kind) ? metaDeps.getAsJsonArray(kind) : new JsonArray();
                             arr.add(dep.getModId());
                             metaDeps.add(kind, arr);
